@@ -1,7 +1,12 @@
 <template>
   <div class="text-group">
-    <div class="input-group">
-      <input :type="type" :value="value" :placeholder="placeholder" />
+    <div class="input-group" :class="{ 'is-invalid': error }">
+      <input
+        :type="type"
+        :value="value"
+        :placeholder="placeholder"
+        @input="$emit('update:value', $event.target.value)"
+      />
       <button v-if="btnTitle" :disabled="disabled" @click="$emit('btnClick')">
         {{ btnTitle }}
       </button>

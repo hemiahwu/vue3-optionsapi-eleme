@@ -5,7 +5,7 @@
     </div>
     <InputGroup
       type="number"
-      v-model="phone"
+      v-model:value="phone"
       placeholder="手机号"
       :btnTitle="btnTitle"
       :disabled="disabled"
@@ -14,7 +14,7 @@
     />
     <InputGroup
       type="number"
-      v-model="verifyCode"
+      v-model:value="verifyCode"
       placeholder="验证码"
       :error="errors.code"
     />
@@ -45,7 +45,39 @@ export default {
   },
   methods: {
     getVerifyCode() {
-      console.log("获取验证码");
+      if (this.validatePhone()) {
+        this.validateBtn();
+      }
+    },
+    validatePhone() {
+      if (!this.phone) {
+        this.errors = {
+          phone: "手机号不能为空",
+        };
+        return false;
+      } else if (!/^1[345678]\d{9}$/.test(this.phone)) {
+        this.errors = {
+          phone: "请填写正确的手机号码",
+        };
+        return false;
+      } else {
+        this.errors = {};
+        return true;
+      }
+    },
+    validateBtn() {
+      let time = 5;
+      let timer = setInterval(() => {
+        if (time === 0) {
+          clearInterval(timer);
+          this.btnTitle = "获取验证码";
+          this.disabled = false;
+        } else {
+          this.btnTitle = time + "秒后重试";
+          this.disabled = true;
+          time--;
+        }
+      }, 1000);
     },
   },
 };
