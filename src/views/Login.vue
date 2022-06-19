@@ -24,7 +24,7 @@
     </div>
 
     <div class="login-btn">
-      <button>登录</button>
+      <button :disabled="isClick" @click="handleLogin">登录</button>
     </div>
   </div>
 </template>
@@ -84,6 +84,32 @@ export default {
           time--;
         }
       }, 1000);
+    },
+    async handleLogin() {
+      this.errors = {};
+
+      try {
+        const res = await this.$axios.post("/api/posts/sms_back", {
+          phone: this.phone,
+          code: this.verifyCode,
+        });
+        console.log(res);
+
+        // 本地存储 ele_login
+        localStorage.setItem("ele_login", true);
+        // 路由跳转
+        this.$router.push("/");
+      } catch (error) {
+        this.errors = {
+          code: error.response.data.msg,
+        };
+      }
+    },
+  },
+  computed: {
+    isClick() {
+      if (!this.phone || !this.verifyCode) return true;
+      else return false;
     },
   },
 };
