@@ -44,8 +44,14 @@ export default {
     };
   },
   methods: {
-    getVerifyCode() {
+    async getVerifyCode() {
       if (this.validatePhone()) {
+        const res = await this.$axios.post("/api/posts/sms_send", {
+          phone: this.phone,
+        });
+
+        console.log(res);
+
         this.validateBtn();
       }
     },
@@ -66,7 +72,7 @@ export default {
       }
     },
     validateBtn() {
-      let time = 5;
+      let time = 60;
       let timer = setInterval(() => {
         if (time === 0) {
           clearInterval(timer);
