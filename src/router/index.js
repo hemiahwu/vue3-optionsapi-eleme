@@ -5,6 +5,27 @@ const routes = [
     path: "/",
     name: "Index",
     component: () => import("../views/Index.vue"),
+    children: [
+      {
+        path: "",
+        redirect: "/home",
+      },
+      {
+        path: "/home",
+        name: "Home",
+        component: () => import("../views/Home.vue"),
+      },
+      {
+        path: "/order",
+        name: "Order",
+        component: () => import("../views/Order.vue"),
+      },
+      {
+        path: "/me",
+        name: "Me",
+        component: () => import("../views/Me.vue"),
+      },
+    ],
   },
   {
     path: "/login",
