@@ -42,6 +42,7 @@ export default {
       });
     },
     getLngLatLocation(lng, lat) {
+      const self = this;
       AMap.plugin("AMap.Geocoder", function () {
         var geocoder = new AMap.Geocoder({
           // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
@@ -54,9 +55,13 @@ export default {
           if (status === "complete" && result.info === "OK") {
             // result为对应的地理位置详细信息
             // console.log(result);
-            console.log(result.regeocode.addressComponent.province);
-            console.log(result.regeocode.addressComponent.city);
-            console.log(result.regeocode.formattedAddress);
+            // console.log(result.regeocode);
+            // console.log(result.regeocode.addressComponent.city);
+            // console.log(result.regeocode.formattedAddress);
+
+            // 存储到vuex中
+            self.$store.dispatch("setLocation",result.regeocode)
+            self.$store.dispatch("setAddress",result.regeocode.formattedAddress)
           }
         });
       });
