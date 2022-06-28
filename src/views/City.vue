@@ -7,15 +7,27 @@
       </div>
       <button @click="$router.go(-1)">取消</button>
     </div>
-    <div class="location">
-      <Location :address="city" />
+    <div v-if="searchList.length === 0">
+      <div class="location">
+        <Location :address="city" />
+      </div>
+      <Alphabet
+        @selectCity="handleSelectCity"
+        ref="allCity"
+        :cityInfo="cityInfo"
+        :keys="keys"
+      />
     </div>
-    <Alphabet
-      @selectCity="handleSelectCity"
-      ref="allCity"
-      :cityInfo="cityInfo"
-      :keys="keys"
-    />
+
+    <ul class="search-list" v-else>
+      <li
+        @click="handleSelectCity(item)"
+        v-for="(item, index) in searchList"
+        :key="index"
+      >
+        {{ item.name }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -28,6 +40,8 @@ export default {
       cityValue: "",
       cityInfo: {},
       keys: {},
+      allCities: [],
+      searchList: [],
     };
   },
   computed: {
@@ -38,25 +52,42 @@ export default {
   created() {
     this.getCityInfo();
   },
+  watch: {
+    cityValue() {
+      this.handleSearch();
+    },
+  },
   methods: {
     async getCityInfo() {
       const res = await this.$axios("/api/posts/cities");
       this.cityInfo = res.data;
-      console.log(this.cityInfo);
 
       this.keys = Object.keys(res.data);
       this.keys.pop();
       this.keys.sort();
 
-      // 在这里调用滚动触发时机
-
-      // 等待DOM渲染完成之后,在进行触发
       this.$nextTick(() => {
         this.$refs.allCity.initScroll();
+      });
+
+      // 将所有城市放到一个容器中
+      this.keys.forEach((key) => {
+        this.cityInfo[key].forEach((city) => {
+          this.allCities.push(city);
+        });
       });
     },
     handleSelectCity(item) {
       this.$router.push({ name: "Address", params: { city: item.name } });
+    },
+    handleSearch() {
+      if (!this.cityValue) {
+        this.searchList = [];
+      } else {
+        this.searchList = this.allCities.filter((item) => {
+          return item.name.indexOf(this.cityValue) != -1;
+        });
+      }
     },
   },
   components: { Location, Alphabet },
@@ -106,5 +137,14 @@ export default {
   padding: 8px 16px;
   height: 65px;
   box-sizing: border-box;
+}
+
+.search-list {
+  background: #fff;
+  padding: 5px 16px;
+}
+.search-list li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
 }
 </style>
