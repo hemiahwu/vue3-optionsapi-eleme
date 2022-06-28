@@ -10,7 +10,7 @@
     <div class="location">
       <Location :address="city" />
     </div>
-    <Alphabet :cityInfo="cityInfo" :keys="keys" />
+    <Alphabet ref="allCity" :cityInfo="cityInfo" :keys="keys" />
   </div>
 </template>
 
@@ -42,6 +42,13 @@ export default {
       this.keys = Object.keys(res.data);
       this.keys.pop();
       this.keys.sort();
+
+      // 在这里调用滚动触发时机
+
+      // 等待DOM渲染完成之后,在进行触发
+      this.$nextTick(() => {
+        this.$refs.allCity.initScroll();
+      });
     },
   },
   components: { Location, Alphabet },
