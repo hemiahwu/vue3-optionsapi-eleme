@@ -1,7 +1,5 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <router-view />
 </template>
 <script>
 export default {
@@ -60,8 +58,11 @@ export default {
             // console.log(result.regeocode.formattedAddress);
 
             // 存储到vuex中
-            self.$store.dispatch("setLocation",result.regeocode)
-            self.$store.dispatch("setAddress",result.regeocode.formattedAddress)
+            self.$store.dispatch("setLocation", result.regeocode);
+            self.$store.dispatch(
+              "setAddress",
+              result.regeocode.formattedAddress
+            );
           }
         });
       });

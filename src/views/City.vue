@@ -10,7 +10,12 @@
     <div class="location">
       <Location :address="city" />
     </div>
-    <Alphabet ref="allCity" :cityInfo="cityInfo" :keys="keys" />
+    <Alphabet
+      @selectCity="handleSelectCity"
+      ref="allCity"
+      :cityInfo="cityInfo"
+      :keys="keys"
+    />
   </div>
 </template>
 
@@ -49,6 +54,9 @@ export default {
       this.$nextTick(() => {
         this.$refs.allCity.initScroll();
       });
+    },
+    handleSelectCity(item) {
+      this.$router.push({ name: "Address", params: { city: item.name } });
     },
   },
   components: { Location, Alphabet },
