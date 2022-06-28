@@ -3,7 +3,7 @@
     <Header :isLeft="true" title="选择收货地址" />
     <div class="city-search">
       <div class="search">
-        <span class="city">
+        <span class="city" @click="$router.push('/city')">
           {{ city }}
           <i class="fa fa-angle-down"></i>
         </span>
@@ -19,7 +19,11 @@
     </div>
     <!-- 列表 -->
     <ul class="area">
-      <li v-for="(item, index) in areaList" :key="index">
+      <li
+        v-for="(item, index) in areaList"
+        :key="index"
+        @click="selectAddress(item)"
+      >
         <h4>{{ item.name }}</h4>
         <p>{{ item.district }} {{ item.address }}</p>
       </li>
@@ -66,6 +70,20 @@ export default {
         });
       });
     },
+    selectAddress(item) {
+      // console.log(item);
+      if (item) {
+        this.$store.dispatch(
+          "setAddress",
+          item.district + item.address + item.name
+        );
+      } else {
+        this.$store.dispatch("setAddress", this.address);
+      }
+
+      // 跳转到Home组件
+      this.$router.push("/home");
+    },
   },
   components: { Header, Location },
   beforeRouteEnter(to, from, next) {
@@ -90,7 +108,6 @@ export default {
   background-color: #fff;
   padding: 10px 20px;
   color: #333;
-  margin-top: 45px;
 }
 .search {
   background-color: #eee;

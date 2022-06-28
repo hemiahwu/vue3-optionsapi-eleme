@@ -34,7 +34,7 @@ export default {
   position: relative;
   text-align: center;
   white-space: nowrap;
-  position: fixed;
+  /* position: fixed; */
   width: 100%;
   top: 0;
   z-index: 99;
