@@ -10,15 +10,19 @@
     <div class="location">
       <Location :address="city" />
     </div>
+    <Alphabet :cityInfo="cityInfo" :keys="keys" />
   </div>
 </template>
 
 <script>
 import Location from "../components/Location.vue";
+import Alphabet from "../components/Alphabet.vue";
 export default {
   data() {
     return {
       cityValue: "",
+      cityInfo: {},
+      keys: {},
     };
   },
   computed: {
@@ -26,7 +30,21 @@ export default {
       return this.$store.getters?.location?.addressComponent?.city || "全国";
     },
   },
-  components: { Location },
+  created() {
+    this.getCityInfo();
+  },
+  methods: {
+    async getCityInfo() {
+      const res = await this.$axios("/api/posts/cities");
+      this.cityInfo = res.data;
+      console.log(this.cityInfo);
+
+      this.keys = Object.keys(res.data);
+      this.keys.pop();
+      this.keys.sort();
+    },
+  },
+  components: { Location, Alphabet },
 };
 </script>
 
