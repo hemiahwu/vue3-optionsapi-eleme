@@ -15,7 +15,7 @@
         />
       </div>
       <!-- 当前定位 -->
-      <Location :address="address" />
+      <Location @click="selectAddress()" :address="address" />
     </div>
     <!-- 列表 -->
     <ul class="area">
